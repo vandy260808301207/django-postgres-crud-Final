@@ -1,0 +1,87 @@
+<div id="list-page">
+  <h2>Student List</h2>
+  
+  <!-- ទម្រង់បន្ថែមសិស្សថ្មី -->
+  <div style="background:#f0f0f0; padding:10px; margin-bottom:15px;">
+    <b>Add New Student:</b><br>
+    First Name: <input type="text" id="add-first"><br><br>
+    Last Name: <input type="text" id="add-last"><br><br>
+    <button onclick="addNewStudent()">Add Student</button>
+  </div>
+
+  <!-- តារាងបង្ហាញបញ្ជីសិស្ស -->
+  <table border="1" style="width:100%; border-collapse:collapse;">
+    <tr style="background-color:#00a86b; color:white;">
+      <th>id</th><th>First Name</th><th>Last Name</th><th>Action</th>
+    </tr>
+    <tbody id="student-table-body">
+      <!-- ឈ្មោះទី១ មានស្រាប់ -->
+      <tr id="row-1">
+        <td>1</td>
+        <td class="fname">Sok</td>
+        <td class="lname">Dara</td>
+        <td>
+          <button onclick="startEdit(this)">Edit</button>
+          <button onclick="this.closest('tr').remove()">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ទំព័រ Edit (លាក់ទុកមុន) -->
+<div id="edit-page" style="display:none; padding:20px;">
+  <h2>Edit Student</h2>
+  <label>First Name: <input type="text" id="edit-first"></label><br><br>
+  <label>Last Name: <input type="text" id="edit-last"></label><br><br>
+  <button onclick="saveEdit()">Submit</button>
+</div>
+
+<script>
+let currentEditingRow = null;
+let idCounter = 2;
+
+// មុខងារបន្ថែមសិស្សថ្មី
+function addNewStudent() {
+  let fname = document.getElementById('add-first').value;
+  let lname = document.getElementById('add-last').value;
+  if(!fname || !lname) return alert('សូមបំពេញឈ្មោះឲ្យគ្រប់!');
+
+  let tbody = document.getElementById('student-table-body');
+  let newRow = `
+    <tr>
+      <td>${idCounter++}</td>
+      <td class="fname">${fname}</td>
+      <td class="lname">${lname}</td>
+      <td>
+        <button onclick="startEdit(this)">Edit</button>
+        <button onclick="this.closest('tr').remove()">Delete</button>
+      </td>
+    </tr>`;
+  tbody.innerHTML += newRow;
+  
+  document.getElementById('add-first').value = '';
+  document.getElementById('add-last').value = '';
+}
+
+// មុខងារបើកទំព័រ Edit
+function startEdit(btn) {
+  currentEditingRow = btn.closest('tr');
+  document.getElementById('edit-first').value = currentEditingRow.querySelector('.fname').innerText;
+  document.getElementById('edit-last').value = currentEditingRow.querySelector('.lname').innerText;
+  
+  document.getElementById('list-page').style.display = 'none';
+  document.getElementById('edit-page').style.display = 'block';
+}
+
+// មុខងាររក្សាទុកការ Edit
+function saveEdit() {
+  if(currentEditingRow) {
+    currentEditingRow.querySelector('.fname').innerText = document.getElementById('edit-first').value;
+    currentEditingRow.querySelector('.lname').innerText = document.getElementById('edit-last').value;
+  }
+  document.getElementById('edit-page').style.display = 'none';
+  document.getElementById('list-page').style.display = 'block';
+}
+  </script>
+  
