@@ -1,87 +1,176 @@
-<div id="list-page">
-  <h2>Student List</h2>
-  
-  <!-- ទម្រង់បន្ថែមសិស្សថ្មី -->
-  <div style="background:#f0f0f0; padding:10px; margin-bottom:15px;">
-    <b>Add New Student:</b><br>
-    First Name: <input type="text" id="add-first"><br><br>
-    Last Name: <input type="text" id="add-last"><br><br>
-    <button onclick="addNewStudent()">Add Student</button>
+<!DOCTYPE html>
+<html lang="km">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Information & Grades</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 15px; background-color: #fff; }
+    h2, h3 { text-align: center; }
+    
+    .form-container { background: #f9f9f9; padding: 15px; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 5px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px; }
+    .form-group { display: flex; flex-direction: column; }
+    .form-group label { font-weight: bold; margin-bottom: 3px; font-size: 13px; }
+    .form-group input { padding: 6px; border: 1px solid #ccc; border-radius: 3px; }
+    
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 800px; }
+    th, td { border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 13px; }
+    th { background-color: #00a86b; color: white; }
+    
+    button { padding: 5px 10px; cursor: pointer; border-radius: 3px; font-weight: bold; }
+    .btn-add { background: #008cba; color: white; border: none; padding: 8px 15px; width: 100%; }
+    .btn-edit { background: #ffc107; border: 1px solid #d39e00; }
+    .btn-delete { background: #dc3545; color: white; border: none; }
+  </style>
+</head>
+<body>
+
+  <div id="list-page">
+    <h2>Student Information & Grades Table</h2>
+    
+    <div class="form-container">
+      <h3>Add Student Details</h3>
+      <div class="form-grid">
+        <div class="form-group"><label>First Name:</label><input type="text" id="add-first"></div>
+        <div class="form-group"><label>Last Name:</label><input type="text" id="add-last"></div>
+        <div class="form-group"><label>Gender:</label><input type="text" id="add-gender"></div>
+        <div class="form-group"><label>Age:</label><input type="number" id="add-age"></div>
+        <div class="form-group"><label>Address:</label><input type="text" id="add-address"></div>
+        <div class="form-group"><label>Phone:</label><input type="text" id="add-phone"></div>
+        <div class="form-group"><label>Major:</label><input type="text" id="add-major"></div>
+        <div class="form-group"><label>Midterm:</label><input type="number" id="add-midterm"></div>
+        <div class="form-group"><label>Final:</label><input type="number" id="add-final"></div>
+      </div>
+      <button class="btn-add" onclick="addNewStudent()">Add to Table</button>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Major</th>
+            <th>Midterm</th>
+            <th>Final</th>
+            <th>Edit</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="student-table-body">
+          <tr>
+            <td>1</td>
+            <td class="fname">Sokha</td>
+            <td class="lname">Chan</td>
+            <td class="gender">Male</td>
+            <td class="age">20</td>
+            <td class="address">Phnom Penh</td>
+            <td class="phone">012345678</td>
+            <td class="major">CS</td>
+            <td class="midterm">85</td>
+            <td class="final">90</td>
+            <td><button class="btn-edit" onclick="startEdit(this)">Edit</button></td>
+            <td><button class="btn-delete" onclick="this.closest('tr').remove()">Delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- តារាងបង្ហាញបញ្ជីសិស្ស -->
-  <table border="1" style="width:100%; border-collapse:collapse;">
-    <tr style="background-color:#00a86b; color:white;">
-      <th>id</th><th>First Name</th><th>Last Name</th><th>Action</th>
-    </tr>
-    <tbody id="student-table-body">
-      <!-- ឈ្មោះទី១ មានស្រាប់ -->
-      <tr id="row-1">
-        <td>1</td>
-        <td class="fname">Sok</td>
-        <td class="lname">Dara</td>
-        <td>
-          <button onclick="startEdit(this)">Edit</button>
-          <button onclick="this.closest('tr').remove()">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <div id="edit-page" style="display:none;" class="form-container">
+    <h2>Edit Student Information</h2>
+    <div class="form-grid">
+      <div class="form-group"><label>First Name:</label><input type="text" id="edit-first"></div>
+      <div class="form-group"><label>Last Name:</label><input type="text" id="edit-last"></div>
+      <div class="form-group"><label>Gender:</label><input type="text" id="edit-gender"></div>
+      <div class="form-group"><label>Age:</label><input type="number" id="edit-age"></div>
+      <div class="form-group"><label>Address:</label><input type="text" id="edit-address"></div>
+      <div class="form-group"><label>Phone:</label><input type="text" id="edit-phone"></div>
+      <div class="form-group"><label>Major:</label><input type="text" id="edit-major"></div>
+      <div class="form-group"><label>Midterm:</label><input type="number" id="edit-midterm"></div>
+      <div class="form-group"><label>Final:</label><input type="number" id="edit-final"></div>
+    </div>
+    <button class="btn-add" style="background:#28a745;" onclick="saveEdit()">Save Changes</button>
+  </div>
 
-<!-- ទំព័រ Edit (លាក់ទុកមុន) -->
-<div id="edit-page" style="display:none; padding:20px;">
-  <h2>Edit Student</h2>
-  <label>First Name: <input type="text" id="edit-first"></label><br><br>
-  <label>Last Name: <input type="text" id="edit-last"></label><br><br>
-  <button onclick="saveEdit()">Submit</button>
-</div>
+  <script>
+    let currentEditingRow = null;
+    let idCounter = 2;
 
-<script>
-let currentEditingRow = null;
-let idCounter = 2;
+    function addNewStudent() {
+      let fname = document.getElementById('add-first').value;
+      let lname = document.getElementById('add-last').value;
+      let gender = document.getElementById('add-gender').value;
+      let age = document.getElementById('add-age').value;
+      let address = document.getElementById('add-address').value;
+      let phone = document.getElementById('add-phone').value;
+      let major = document.getElementById('add-major').value;
+      let midterm = document.getElementById('add-midterm').value;
+      let final = document.getElementById('add-final').value;
 
-// មុខងារបន្ថែមសិស្សថ្មី
-function addNewStudent() {
-  let fname = document.getElementById('add-first').value;
-  let lname = document.getElementById('add-last').value;
-  if(!fname || !lname) return alert('សូមបំពេញឈ្មោះឲ្យគ្រប់!');
+      if(!fname || !lname) return alert('សូមបំពេញឈ្មោះសិន!');
 
-  let tbody = document.getElementById('student-table-body');
-  let newRow = `
-    <tr>
-      <td>${idCounter++}</td>
-      <td class="fname">${fname}</td>
-      <td class="lname">${lname}</td>
-      <td>
-        <button onclick="startEdit(this)">Edit</button>
-        <button onclick="this.closest('tr').remove()">Delete</button>
-      </td>
-    </tr>`;
-  tbody.innerHTML += newRow;
-  
-  document.getElementById('add-first').value = '';
-  document.getElementById('add-last').value = '';
-}
+      let tbody = document.getElementById('student-table-body');
+      let newRow = `
+        <tr>
+          <td>${idCounter++}</td>
+          <td class="fname">${fname}</td>
+          <td class="lname">${lname}</td>
+          <td class="gender">${gender}</td>
+          <td class="age">${age}</td>
+          <td class="address">${address}</td>
+          <td class="phone">${phone}</td>
+          <td class="major">${major}</td>
+          <td class="midterm">${midterm}</td>
+          <td class="final">${final}</td>
+          <td><button class="btn-edit" onclick="startEdit(this)">Edit</button></td>
+          <td><button class="btn-delete" onclick="this.closest('tr').remove()">Delete</button></td>
+        </tr>`;
+      tbody.innerHTML += newRow;
+      
+      document.querySelectorAll('#list-page input').forEach(input => input.value = '');
+    }
 
-// មុខងារបើកទំព័រ Edit
-function startEdit(btn) {
-  currentEditingRow = btn.closest('tr');
-  document.getElementById('edit-first').value = currentEditingRow.querySelector('.fname').innerText;
-  document.getElementById('edit-last').value = currentEditingRow.querySelector('.lname').innerText;
-  
-  document.getElementById('list-page').style.display = 'none';
-  document.getElementById('edit-page').style.display = 'block';
-}
+    function startEdit(btn) {
+      currentEditingRow = btn.closest('tr');
+      document.getElementById('edit-first').value = currentEditingRow.querySelector('.fname').innerText;
+      document.getElementById('edit-last').value = currentEditingRow.querySelector('.lname').innerText;
+      document.getElementById('edit-gender').value = currentEditingRow.querySelector('.gender').innerText;
+      document.getElementById('edit-age').value = currentEditingRow.querySelector('.age').innerText;
+      document.getElementById('edit-address').value = currentEditingRow.querySelector('.address').innerText;
+      document.getElementById('edit-phone').value = currentEditingRow.querySelector('.phone').innerText;
+      document.getElementById('edit-major').value = currentEditingRow.querySelector('.major').innerText;
+      document.getElementById('edit-midterm').value = currentEditingRow.querySelector('.midterm').innerText;
+      document.getElementById('edit-final').value = currentEditingRow.querySelector('.final').innerText;
+      
+      document.getElementById('list-page').style.display = 'none';
+      document.getElementById('edit-page').style.display = 'block';
+    }
 
-// មុខងាររក្សាទុកការ Edit
-function saveEdit() {
-  if(currentEditingRow) {
-    currentEditingRow.querySelector('.fname').innerText = document.getElementById('edit-first').value;
-    currentEditingRow.querySelector('.lname').innerText = document.getElementById('edit-last').value;
-  }
-  document.getElementById('edit-page').style.display = 'none';
-  document.getElementById('list-page').style.display = 'block';
-}
+    function saveEdit() {
+      if(currentEditingRow) {
+        currentEditingRow.querySelector('.fname').innerText = document.getElementById('edit-first').value;
+        currentEditingRow.querySelector('.lname').innerText = document.getElementById('edit-last').value;
+        currentEditingRow.querySelector('.gender').innerText = document.getElementById('edit-gender').value;
+        currentEditingRow.querySelector('.age').innerText = document.getElementById('edit-age').value;
+        currentEditingRow.querySelector('.address').innerText = document.getElementById('edit-address').value;
+        currentEditingRow.querySelector('.phone').innerText = document.getElementById('edit-phone').value;
+        currentEditingRow.querySelector('.major').innerText = document.getElementById('edit-major').value;
+        currentEditingRow.querySelector('.midterm').innerText = document.getElementById('edit-midterm').value;
+        currentEditingRow.querySelector('.final').innerText = document.getElementById('edit-final').value;
+      }
+      document.getElementById('edit-page').style.display = 'none';
+      document.getElementById('list-page').style.display = 'block';
+    }
   </script>
-  
+
+</body>
+</html>
+
