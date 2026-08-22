@@ -3,169 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Information System</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 15px; background-color: #fff; }
-    h2, h3 { text-align: center; }
-    
-    .form-container { background: #f9f9f9; padding: 15px; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 5px; }
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 10px; }
-    .form-group { display: flex; flex-direction: column; }
-    .form-group label { font-weight: bold; margin-bottom: 3px; font-size: 13px; }
-    .form-group input { padding: 6px; border: 1px solid #ccc; border-radius: 3px; }
-    
-    .table-responsive { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; min-width: 800px; }
-    th, td { border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 13px; }
-    th { background-color: #00a86b; color: white; }
-    
-    button { padding: 5px 10px; cursor: pointer; border-radius: 3px; font-weight: bold; }
-    .btn-add { background: #008cba; color: white; border: none; padding: 8px 15px; width: 100%; }
-    .btn-edit { background: #ffc107; border: 1px solid #d39e00; }
-    .btn-delete { background: #dc3545; color: white; border: none; }
-  </style>
+  <title>Invoice</title>
 </head>
-<body>
+<body style="max-width: 500px; margin: auto; padding: 15px; font-family: sans-serif;" contenteditable="true">
 
-  <!-- ទំព័រដើម / បញ្ជីសិស្ស -->
-  <div id="list-page">
-    <h2>Student Information System</h2>
-    
-    <!-- Form បន្ថែមទិន្នន័យ -->
-    <div class="form-container">
-      <h3>Add Student Details</h3>
-      <div class="form-grid">
-        <div class="form-group"><label>First Name:</label><input type="text" id="add-first"></div>
-        <div class="form-group"><label>Last Name:</label><input type="text" id="add-last"></div>
-        <div class="form-group"><label>Gender:</label><input type="text" id="add-gender"></div>
-        <div class="form-group"><label>Age:</label><input type="number" id="add-age"></div>
-        <div class="form-group"><label>Address:</label><input type="text" id="add-address"></div>
-        <div class="form-group"><label>Phone:</label><input type="text" id="add-phone"></div>
-        <div class="form-group"><label>Major:</label><input type="text" id="add-major"></div>
-        <div class="form-group"><label>Midterm:</label><input type="number" id="add-midterm"></div>
-        <div class="form-group"><label>Final:</label><input type="number" id="add-final"></div>
-      </div>
-      <button class="btn-add" onclick="addNewStudent()">Add to Table</button>
-    </div>
+  <!-- Header -->
+  <h1 style="text-align: center;">INVOICE</h1>
 
-    <!-- តារាងបង្ហាញទិន្នន័យ -->
-    <div class="table-responsive">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Gender</th>
-            <th>Age</th>
-            <th>Address</th>
-            <th>Phone</th>
-            <th>Major</th>
-            <th>Midterm</th>
-            <th>Final</th>
-            <th>Edit</th>
-            <th>Delete</th>
-          </tr>
-        </thead>
-        <tbody id="student-table-body">
-          <!-- ទុកទទេ គ្មានទិន្នន័យជាប់ពីដើមទៀតទេ -->
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <!-- Customer Information -->
+  <p>
+    <b>Date:</b> 2026-08-11<br>
+    <b>Customer:</b> Walk-In<br>
+    <b>Phone:</b> 093 240 004
+  </p>
 
-  <!-- ទំព័រ Edit (លាក់ទុក) -->
-  <div id="edit-page" style="display:none;" class="form-container">
-    <h2>Edit Student Information</h2>
-    <div class="form-grid">
-      <div class="form-group"><label>First Name:</label><input type="text" id="edit-first"></div>
-      <div class="form-group"><label>Last Name:</label><input type="text" id="edit-last"></div>
-      <div class="form-group"><label>Gender:</label><input type="text" id="edit-gender"></div>
-      <div class="form-group"><label>Age:</label><input type="number" id="edit-age"></div>
-      <div class="form-group"><label>Address:</label><input type="text" id="edit-address"></div>
-      <div class="form-group"><label>Phone:</label><input type="text" id="edit-phone"></div>
-      <div class="form-group"><label>Major:</label><input type="text" id="edit-major"></div>
-      <div class="form-group"><label>Midterm:</label><input type="number" id="edit-midterm"></div>
-      <div class="form-group"><label>Final:</label><input type="number" id="edit-final"></div>
-    </div>
-    <button class="btn-add" style="background:#28a745;" onclick="saveEdit()">Save Changes</button>
-  </div>
-
-  <script>
-    let currentEditingRow = null;
-    let idCounter = 1;
-
-    // មុខងារបន្ថែមទិន្នន័យ
-    function addNewStudent() {
-      let fname = document.getElementById('add-first').value;
-      let lname = document.getElementById('add-last').value;
-      let gender = document.getElementById('add-gender').value;
-      let age = document.getElementById('add-age').value;
-      let address = document.getElementById('add-address').value;
-      let phone = document.getElementById('add-phone').value;
-      let major = document.getElementById('add-major').value;
-      let midterm = document.getElementById('add-midterm').value;
-      let final = document.getElementById('add-final').value;
-
-      if(!fname || !lname) return alert('សូមបំពេញឈ្មោះសិន!');
-
-      let tbody = document.getElementById('student-table-body');
-      let newRow = `
-        <tr>
-          <td>${idCounter++}</td>
-          <td class="fname">${fname}</td>
-          <td class="lname">${lname}</td>
-          <td class="gender">${gender}</td>
-          <td class="age">${age}</td>
-          <td class="address">${address}</td>
-          <td class="phone">${phone}</td>
-          <td class="major">${major}</td>
-          <td class="midterm">${midterm}</td>
-          <td class="final">${final}</td>
-          <td><button class="btn-edit" onclick="startEdit(this)">Edit</button></td>
-          <td><button class="btn-delete" onclick="this.closest('tr').remove()">Delete</button></td>
-        </tr>`;
-      tbody.innerHTML += newRow;
-      
-      // លុបអត្ថបទក្នុងប្រអប់បញ្ចូល
-      document.querySelectorAll('#list-page input').forEach(input => input.value = '');
-    }
-
-    // មុខងារបើកទំព័រ Edit
-    function startEdit(btn) {
-      currentEditingRow = btn.closest('tr');
-      document.getElementById('edit-first').value = currentEditingRow.querySelector('.fname').innerText;
-      document.getElementById('edit-last').value = currentEditingRow.querySelector('.lname').innerText;
-      document.getElementById('edit-gender').value = currentEditingRow.querySelector('.gender').innerText;
-      document.getElementById('edit-age').value = currentEditingRow.querySelector('.age').innerText;
-      document.getElementById('edit-address').value = currentEditingRow.querySelector('.address').innerText;
-      document.getElementById('edit-phone').value = currentEditingRow.querySelector('.phone').innerText;
-      document.getElementById('edit-major').value = currentEditingRow.querySelector('.major').innerText;
-      document.getElementById('edit-midterm').value = currentEditingRow.querySelector('.midterm').innerText;
-      document.getElementById('edit-final').value = currentEditingRow.querySelector('.final').innerText;
-      
-      document.getElementById('list-page').style.display = 'none';
-      document.getElementById('edit-page').style.display = 'block';
-    }
-
-    // មុខងាររក្សាទុកការ Edit
-    function saveEdit() {
-      if(currentEditingRow) {
-        currentEditingRow.querySelector('.fname').innerText = document.getElementById('edit-first').value;
-        currentEditingRow.querySelector('.lname').innerText = document.getElementById('edit-last').value;
-        currentEditingRow.querySelector('.gender').innerText = document.getElementById('edit-gender').value;
-        currentEditingRow.querySelector('.age').innerText = document.getElementById('edit-age').value;
-        currentEditingRow.querySelector('.address').innerText = document.getElementById('edit-address').value;
-        currentEditingRow.querySelector('.phone').innerText = document.getElementById('edit-phone').value;
-        currentEditingRow.querySelector('.major').innerText = document.getElementById('edit-major').value;
-        currentEditingRow.querySelector('.midterm').innerText = document.getElementById('edit-midterm').value;
-        currentEditingRow.querySelector('.final').innerText = document.getElementById('edit-final').value;
-      }
-      document.getElementById('edit-page').style.display = 'none';
-      document.getElementById('list-page').style.display = 'block';
-    }
-  </script>
+  <!-- Invoice Table -->
+  <table style="width: 100%; border-collapse: collapse; text-align: center;" border="1">
+    <thead>
+      <tr style="background: #1f538e; color: #fff;">
+        <th>#</th>
+        <th style="text-align: left;">Item</th>
+        <th>Unit Price</th>
+        <th>Qty</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td style="text-align: left;">Coca Cola</td>
+        <td>0.50</td>
+        <td>2</td>
+        <td>1.00</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td style="text-align: left;">Vital 500ml</td>
+        <td>0.25</td>
+        <td>5</td>
+        <td>1.25</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td style="text-align: left;">ABC</td>
+        <td>1.50</td>
+        <td>3</td>
+        <td>4.50</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>6</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr style="background: #e66025; font-weight: bold;">
+        <td colspan="4" style="text-align: right;">Grand Total</td>
+        <td>6.75</td>
+      </tr>
+    </tfoot>
+  </table>
 
 </body>
 </html>
-
